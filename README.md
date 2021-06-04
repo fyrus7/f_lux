@@ -14,29 +14,29 @@ I did some "reverse engineering" so anyone can easily build this. I saw some lig
 # How to connect:
 
 OLED:
-VCC to 5V
-GND to GND
-SCL to A5
-SDA to A4
+- VCC to 5V
+- GND to GND
+- SCL to A5
+- SDA to A4
 
 Rotary encoder:
-VCC to 5V
-GND to GND
-SW to Digital pin 3
-DT to A1
-CLK to A0
+- VCC to 5V
+- GND to GND
+- SW to Digital pin 3
+- DT to A1
+- CLK to A0
 
 TSL2591 sensor:
-VCC to 5V
-GND to GND
-SCL to A5
-SDA to A4
-(do not connect remaining pins)
+- VCC to 5V
+- GND to GND
+- SCL to A5
+- SDA to A4
+- (do not connect remaining pins)
 
 # Software changes:
 There is no need to change anything for rotary encoder and the light sensor.
 
-For OLED you may need to change the address on line 501  of the main sketch. Address for 128x64 OLED should be 0x3D, however for me it was 0x3C which is still set in the sketch.
+For OLED you may need to change the address on line 508  of the main sketch. Address for 128x64 OLED should be 0x3D, however for me it was 0x3C which is still set in the sketch.
 
 # Libraries:
 Download Adafruit_GFX from library manager say yes to download other support libraries.
