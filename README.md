@@ -39,7 +39,8 @@ There is no need to change anything for rotary encoder and the light sensor.
 For OLED you may need to change the address on line 508  of the main sketch. Address for 128x64 OLED should be 0x3D, however for me it was 0x3C which is still set in the sketch.
 
 # Libraries:
-Download Adafruit_GFX from library manager say yes to download other support libraries.
+
+Every needed library should be now in zip form in tins repository. No need to download anything off the library manager. ~~[Download Adafruit_GFX from library manager say yes to download other support libraries.]~~
 
 Rest of the libraries are included as ZIP files in this repository. Install them. There is change in one of them to make it work (for me at least)
 
