@@ -395,25 +395,47 @@ float theRemainder = 0;
 byte byteRemainder = 0;
 int filmspeedSelector = 6;
 int filmspeedDigits = 100;
+
+/*
+ * Adding Film speeds:
+ * 
+ * Add your desired speed to filmspeedArray[] then add one to the number in SPEED. 
+ */
+
+#define SPEED 16
+
 const unsigned int PROGMEM filmspeedArray[] = {
-  1, 5, 10, 25, 50, 100, 200, 400, 500, 600, 800, 1200, 1600, 3200, 6400 
-};
+  1, 5, 10, 25, 50, 100, 200, 320, 400, 500, 600, 800, 1200, 1600, 3200, 6400};
+
+
 int shutterspeedDigits = 0;
 int shutterspeedSelector = 10;
 
-//ADD SHUTTER POSITIONS HERE
-const unsigned int PROGMEM shutterspeedArray[] = {
-/*0*/  3000, 2000, 1500, 1000, 800, 500, 400, 250, 200, 125, 100, 75, 60, 50, 30, 25, 10, 8, 5, 4, 2, // 20 |Fraction of a second
-/*21*/  1, 2, 3, 4, 5, 8, 10, 15, 20, 30, 45, // 31  |Over a second
-/*32*/  1, 2, 3, 4, 5, 10, 15, 20, 30, 45, 60, //43 Over a minute
-/*44*/  1, 2, 4, 8, 12, 16, 18, 24, 25, 36, 48, 50, 64, 72, 128, 256, 300 // 59 |fps
-};
 
-//When adding shutter speeds, add your number to the correct row, then you have to recount the rows. 
-//The 3000 is number 0
-//300 is number 59
-//If you want to add extra 1/x, add it to the first row, then add it will be 0-20, 21-31, 32-43 and 44-59
-//You have to edit these numbers to few places, you can find them using ADD SHUTTER POSITIONS HERE.
+/* 
+ *  Adding custom shutter speeds:
+ *  
+ *  Add your desired speed to one of the lines in the shutterspeedArray[].
+ *  First line is fractions of second ( 1/x )
+ *  Second is seconds
+ *  Third is minutes
+ *  Forth is FPS
+ *  
+ *  Numbers in the defines correspond to how many choices are on a given line.
+ *  
+*/
+#define FRACTIONS 21
+#define SECONDS 11
+#define MINUTES 11
+#define FPS 17
+
+
+const unsigned int PROGMEM shutterspeedArray[] = {
+  3000, 2000, 1500, 1000, 800, 500, 400, 250, 200, 125, 100, 75, 60, 50, 30, 25, 10, 8, 5, 4, 2, // Fraction of a second
+  1, 2, 3, 4, 5, 8, 10, 15, 20, 30, 45, // Seconds
+  1, 2, 3, 4, 5, 10, 15, 20, 30, 45, 60, // Minutes
+  1, 2, 4, 8, 12, 16, 18, 24, 25, 36, 48, 50, 64, 72, 128, 256, 300}; // FPS
+
 
 float thelux = 0;
 float filmSpeed = 200;
@@ -599,30 +621,29 @@ void lightSensor () {
   thelux *= 4.25;  // x4.25 for Calbration
 }
 
-//ADD SHUTTER POSITIONS HERE
 void sensorCompute () {
-  if (shutterspeedSelector > 59) {
+  if (shutterspeedSelector > (FRACTIONS + SECONDS + MINUTES + FPS - 1)) {
     shutterspeedSelector = 0;
   } else if (shutterspeedSelector < 0) {
-    shutterspeedSelector = 59;
+    shutterspeedSelector = (FRACTIONS + SECONDS + MINUTES + FPS - 1);
   }
   
-  if (filmspeedSelector > 14) {
+  if (filmspeedSelector > (SPEED - 1)) {
     filmspeedSelector = 0;
   } else if (filmspeedSelector < 0) {
-    filmspeedSelector = 14;
+    filmspeedSelector = (SPEED - 1);
   }
   
   shutterspeedDigits = pgm_read_word_near(shutterspeedArray + shutterspeedSelector);
 
-  //ADD SHUTTER POSITIONS HERE
-  if (shutterspeedSelector <= 20) {
+
+  if (shutterspeedSelector <= (FRACTIONS - 1)) {
     shutterSpeed = (1 / (float)shutterspeedDigits);
-  } else if (shutterspeedSelector >= 21 && shutterspeedSelector <= 31) {
+  } else if (shutterspeedSelector >= (FRACTIONS) && shutterspeedSelector <= (FRACTIONS + SECONDS - 1)) {
     shutterSpeed = (float)shutterspeedDigits;
-  } else if (shutterspeedSelector >= 32 && shutterspeedSelector <= 42) {
+  } else if (shutterspeedSelector >= (FRACTIONS + SECONDS) && shutterspeedSelector <= (FRACTIONS + SECONDS + MINUTES - 1)) {
     shutterSpeed = (60*(float)shutterspeedDigits);
-  } else if (shutterspeedSelector >= 43 && shutterspeedSelector <= 59) {
+  } else if (shutterspeedSelector >= (FRACTIONS + SECONDS + MINUTES) && shutterspeedSelector <= (FRACTIONS + SECONDS + MINUTES + FPS - 1)) {
     shutterSpeed =  ( 1 / (2 * (float)shutterspeedDigits) );
   }
 
@@ -691,24 +712,24 @@ void fstopDisplay() {
     strcpy_P(fStopStandard, (char*)pgm_read_word(&(fstopStandardArray[fstopPicker])));
 }
 
-//ADD SHUTTER POSITIONS HERE
+
 void shutterspeedDisplay () {
-  if (shutterspeedSelector <= 20) {
+  if (shutterspeedSelector <= (FRACTIONS - 1)) {
     display.print(F("1/"));
     display.print(shutterspeedDigits);
-  } else if (shutterspeedSelector == 21) {
+  } else if (shutterspeedSelector == FRACTIONS) {
     display.print(shutterspeedDigits);
     display.print(F(" sec"));
-  } else if (shutterspeedSelector >= 22 && shutterspeedSelector <= 31) {
+  } else if (shutterspeedSelector >= (FRACTIONS + 1) && shutterspeedSelector <= (FRACTIONS + SECONDS - 1)) {
     display.print(shutterspeedDigits);
     display.print(F(" secs"));
-    } else if (shutterspeedSelector == 32) {
+    } else if (shutterspeedSelector == (FRACTIONS + SECONDS)) {
     display.print(shutterspeedDigits);
     display.print(F(" min"));
-  } else if (shutterspeedSelector >= 33 && shutterspeedSelector <= 42) {
+  } else if (shutterspeedSelector >= (FRACTIONS + SECONDS + 1) && shutterspeedSelector <= (FRACTIONS + SECONDS + MINUTES - 1)) {
     display.print(shutterspeedDigits);
     display.print(F(" mins"));
-  } else if (shutterspeedSelector >= 44 && shutterspeedSelector <= 59) {
+  } else if (shutterspeedSelector >= (FRACTIONS + SECONDS + MINUTES + 1) && shutterspeedSelector <= (FRACTIONS + SECONDS + MINUTES + FPS - 1)) {
     display.print(shutterspeedDigits);
     display.print(F(" fps"));
   }
