@@ -40,9 +40,10 @@ For OLED you may need to change the address on line 508  of the main sketch. Add
 
 # Libraries:
 
-Every needed library should be now in zip form in tins repository. No need to download anything off the library manager. ~~[Download Adafruit_GFX from library manager say yes to download other support libraries.]~~
+All libraries are now included as zip in this repository. No need to download anything off the library manager. 
+~~[Download Adafruit_GFX from library manager say yes to download other support libraries.]~~
 
-Rest of the libraries are included as ZIP files in this repository. Install them. There is change in one of them to make it work (for me at least)
+Rest of the libraries are included as ZIP files in this repository. Install them. There is change in one of them to make it work (for me at least).
 
 # SCREEN NOT WORKING RIGHT?
 For whatever reason when I connected the screen, it would treat it as 128x32 and would leave every second row blank. That resulted in seeing only half of the screen UI. Change is in library Adafruit_SSD1306.h. On line 28 I enabled #define SSD1306_128_64 and on line 29 I disabled //#define SSD1306_128_32. If you have some sort of problem and cant see images on screen in the correct aspect ratio try to switch it back. Also make sure you really have 128x64px display and you have the correct address set!!
