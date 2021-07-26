@@ -36,7 +36,8 @@ TSL2591 sensor:
 # Software changes:
 There is no need to change anything for rotary encoder and the light sensor.
 
-For OLED you may need to change the address on line 508  of the main sketch. Address for 128x64 OLED should be 0x3D, however for me it was 0x3C which is still set in the sketch.
+For OLED you may need to change the address on line 530  of the main sketch. Address for 128x64 OLED should be 0x3D, however for me it was 0x3C which is still set in the sketch.
+display.begin(SSD1306_SWITCHCAPVCC, 0x3C)
 
 # Libraries:
 
@@ -49,8 +50,13 @@ Rest of the libraries are included as ZIP files in this repository. Install them
 For whatever reason when I connected the screen, it would treat it as 128x32 and would leave every second row blank. That resulted in seeing only half of the screen UI. Change is in library Adafruit_SSD1306.h. On line 28 I enabled #define SSD1306_128_64 and on line 29 I disabled //#define SSD1306_128_32. If you have some sort of problem and cant see images on screen in the correct aspect ratio try to switch it back. Also make sure you really have 128x64px display and you have the correct address set!!
 
 # Case
-Planing to print one and Ill add the STL when Im done.
+~~Planing to print one and Ill add the STL when Im done.~~
 
+# Custom shutterspeeds and ISOs
+
+This was made super easy now. For ISOs go to line 400. For Shutterspeeds line 416.
+
+Process for both is similar. First add your desired value to the correct line of array, then edit the defined values (basically how many options are on a given line). That's it. Original program is calculating the F number based on these arrays. 
 
 # Thats it!
 Enjoy your lightmeter.
